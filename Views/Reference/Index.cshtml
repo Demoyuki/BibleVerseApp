@@ -1,0 +1,77 @@
+@* ============================================================
+   File: Reference/Index.cshtml
+   Description: Drop-down selectors for Book and Chapter lookup.
+   ============================================================ *@
+@model BibleVerseApp.Models.ReferenceViewModel
+@{
+    ViewData["Title"] = "Browse by Reference";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-container">
+    <div class="page-header">
+        <h2>Browse by Reference</h2>
+        <p>Select a Book and Chapter to view all verses in that chapter.</p>
+    </div>
+
+    <div class="card reference-card">
+        <form method="get" asp-controller="Reference" asp-action="Results">
+            <div class="form-row">
+                <label class="form-label" for="bookId">Book</label>
+                <select name="bookId" id="bookId" class="form-select">
+                    <option value="">-- Select Book --</option>
+                    @{
+                        // Group books by testament for organized drop-down
+                        var otBooks = Model.AllBooks.Where(b => b.Testament == "OT").ToList();
+                        var ntBooks = Model.AllBooks.Where(b => b.Testament == "NT").ToList();
+                    }
+
+                    <optgroup label="Old Testament">
+                        @foreach (var book in otBooks)
+                        {
+                            <option value="@book.BookId" selected="@(book.BookId == Model.SelectedBookId)">
+                                @book.BookName
+                            </option>
+                        }
+                    </optgroup>
+
+                    <optgroup label="New Testament">
+                        @foreach (var book in ntBooks)
+                        {
+                            <option value="@book.BookId" selected="@(book.BookId == Model.SelectedBookId)">
+                                @book.BookName
+                            </option>
+                        }
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-row">
+                <label class="form-label" for="chapter">Chapter</label>
+                <select name="chapter" id="chapter" class="form-select">
+                    <option value="">-- Select Chapter --</option>
+                    @for (int i = 1; i <= Model.ChapterCount; i++)
+                    {
+                        <option value="@i" selected="@(i == Model.SelectedChapter)">
+                            @i
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="btn btn-primary">Go</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Dynamically update chapter dropdown when book changes
+        document.getElementById('bookId').addEventListener('change', function () {
+            const bookId = this.value;
+            if (!bookId) return;
+            // Reload the page with selected book to get correct chapter count
+            window.location.href = '/Reference?bookId=' + bookId + '&chapter=1';
+        });
+    </script>
+}

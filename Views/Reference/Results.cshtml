@@ -1,0 +1,65 @@
+@* ============================================================
+   File: Reference/Results.cshtml
+   Description: Displays all verses from the selected chapter
+                in a table with Details links to the verse page.
+   ============================================================ *@
+@model BibleVerseApp.Models.ReferenceViewModel
+@{
+    var selectedBook = Model.AllBooks.FirstOrDefault(b => b.BookId == Model.SelectedBookId);
+    ViewData["Title"] = $"{selectedBook?.BookName} {Model.SelectedChapter}";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-container">
+    <div class="page-header">
+        <div class="page-header-top">
+            <a asp-controller="Reference" asp-action="Index" class="back-link">&larr; Back to Browse</a>
+        </div>
+        <h2>@selectedBook?.BookName &mdash; Chapter @Model.SelectedChapter</h2>
+        <p>@Model.Verses.Count verse(s) in this chapter.</p>
+    </div>
+
+    @if (Model.Verses.Count > 0)
+    {
+        <div class="verse-list">
+            @foreach (var verse in Model.Verses)
+            {
+                <div class="verse-row">
+                    <div class="verse-ref">
+                        <span class="ref-badge">@verse.ShortReference</span>
+                    </div>
+                    <div class="verse-text">@verse.Text</div>
+                    <div class="verse-action">
+                        <a asp-controller="Verse"
+                           asp-action="Details"
+                           asp-route-id="@verse.Id"
+                           class="btn btn-sm">Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <p>No verses found for this selection.</p>
+        </div>
+    }
+
+    <div class="chapter-nav">
+        @if (Model.SelectedChapter > 1)
+        {
+            <a asp-controller="Reference" asp-action="Results"
+               asp-route-bookId="@Model.SelectedBookId"
+               asp-route-chapter="@(Model.SelectedChapter - 1)"
+               class="btn btn-secondary">&larr; Previous Chapter</a>
+        }
+        @if (Model.SelectedChapter < Model.ChapterCount)
+        {
+            <a asp-controller="Reference" asp-action="Results"
+               asp-route-bookId="@Model.SelectedBookId"
+               asp-route-chapter="@(Model.SelectedChapter + 1)"
+               class="btn btn-secondary">Next Chapter &rarr;</a>
+        }
+    </div>
+</div>

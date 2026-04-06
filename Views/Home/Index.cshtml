@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="hero">
+    <div class="hero-content">
+        <div class="hero-icon">✝</div>
+        <h1>Bible Verse Searcher</h1>
+        <p class="hero-sub">Search by keyword, or browse by Book and Chapter. Save personal notes on any verse.</p>
+        <div class="hero-buttons">
+            <a asp-controller="Search" asp-action="Index" class="btn btn-primary">Search Verses</a>
+            <a asp-controller="Reference" asp-action="Index" class="btn btn-secondary">Browse by Reference</a>
+        </div>
+    </div>
+</div>
+
+<div class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Keyword Search</h3>
+        <p>Search all 31,000+ KJV verses for any word or phrase. Filter by Old or New Testament.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Browse by Reference</h3>
+        <p>Select any book and chapter from drop-down menus to see all verses at a glance.</p>
+    </div>
+    <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Personal Notes</h3>
+        <p>Add and save commentary, sermon notes, or personal reflections on any verse.</p>
+    </div>
+</div>

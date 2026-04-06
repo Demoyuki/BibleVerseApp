@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bible Verse Searcher</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="/" class="brand">
+                <span class="brand-icon">✝</span>
+                <span class="brand-name">Bible Verse Searcher</span>
+            </a>
+            <nav class="main-nav">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-controller="Search" asp-action="Index">Search</a>
+                <a asp-controller="Reference" asp-action="Index">Browse</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <p>CST-350 Activity 8 &mdash; Bible Verse Searcher &mdash; Grand Canyon University &copy; 2024</p>
+    </footer>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

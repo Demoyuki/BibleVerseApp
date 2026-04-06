@@ -1,0 +1,85 @@
+@* ============================================================
+   File: Verse/Details.cshtml
+   Description: Displays a single Bible verse, all saved notes,
+                and a form for adding a new personal note.
+   ============================================================ *@
+@model BibleVerseApp.Models.VerseDetailViewModel
+@{
+    ViewData["Title"] = Model.Verse.ShortReference;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-container">
+    <div class="page-header">
+        <div class="page-header-top">
+            <a href="javascript:history.back()" class="back-link">&larr; Back</a>
+        </div>
+        <h2>@Model.Verse.ShortReference</h2>
+    </div>
+
+    {{-- Verse Text Card --}}
+    <div class="card verse-detail-card">
+        <div class="verse-detail-label">KJV &mdash; @Model.Verse.Book?.BookName</div>
+        <blockquote class="verse-blockquote">
+            &ldquo;@Model.Verse.Text&rdquo;
+        </blockquote>
+        <div class="verse-detail-meta">
+            @Model.Verse.Book?.BookName &mdash;
+            Chapter @Model.Verse.Chapter, Verse @Model.Verse.VerseNum
+            (@(Model.Verse.Book?.Testament == "OT" ? "Old Testament" : "New Testament"))
+        </div>
+    </div>
+
+    {{-- Saved Notes Section --}}
+    <div class="section-heading">
+        <h3>Saved Notes (@Model.Notes.Count)</h3>
+    </div>
+
+    @if (Model.Notes.Count > 0)
+    {
+        <div class="notes-list">
+            @foreach (var note in Model.Notes)
+            {
+                <div class="note-card">
+                    <div class="note-meta">
+                        @note.CreatedAt.ToString("MMM dd, yyyy h:mm tt")
+                    </div>
+                    <div class="note-text">@note.NoteText</div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-notes">
+            <p>No notes yet. Add your first note below.</p>
+        </div>
+    }
+
+    {{-- Add New Note Form --}}
+    <div class="section-heading">
+        <h3>Add a Note</h3>
+    </div>
+
+    <div class="card">
+        <form method="post" asp-controller="Verse" asp-action="AddNote">
+            @* Hidden field carries the verse ID back to the controller *@
+            <input type="hidden" asp-for="NewNote.VerseId" />
+
+            <div class="form-row">
+                <label class="form-label" for="NewNote_NoteText">
+                    Your Note for @Model.Verse.ShortReference
+                </label>
+                <textarea asp-for="NewNote.NoteText"
+                          id="NewNote_NoteText"
+                          class="form-textarea"
+                          rows="5"
+                          placeholder="Enter your personal notes, commentary, or reflections..."></textarea>
+            </div>
+
+            <div class="form-row">
+                <button type="submit" class="btn btn-primary">Save Note</button>
+            </div>
+        </form>
+    </div>
+</div>

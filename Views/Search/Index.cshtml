@@ -1,0 +1,80 @@
+@model BibleVerseApp.Models.SearchViewModel
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-container">
+    <div class="page-header">
+        <h2>Search Bible Verses</h2>
+        <p>Enter a keyword or phrase to find matching verses across the KJV Bible.</p>
+    </div>
+
+    <div class="card search-card">
+        <form method="get" asp-controller="Search" asp-action="Results">
+            <div class="form-row">
+                <label class="form-label">Search Term</label>
+                <input asp-for="SearchTerm"
+                       class="form-input"
+                       placeholder="e.g. grace, kingdom of heaven, born again..."
+                       autocomplete="off" />
+            </div>
+
+            <div class="form-row checkbox-row">
+                <label class="form-label">Testament</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input asp-for="IncludeOldTestament" type="checkbox" />
+                        Old Testament
+                    </label>
+                    <label class="checkbox-label">
+                        <input asp-for="IncludeNewTestament" type="checkbox" />
+                        New Testament
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+    {
+        <div class="results-section">
+            <div class="results-header">
+                @if (Model.HasResults)
+                {
+                    <h3>@Model.Results.Count result(s) for &ldquo;@Model.SearchTerm&rdquo;</h3>
+                }
+                else
+                {
+                    <h3>No results found for &ldquo;@Model.SearchTerm&rdquo;</h3>
+                    <p>Try different keywords, or expand your Testament selection.</p>
+                }
+            </div>
+
+            @if (Model.HasResults)
+            {
+                <div class="verse-list">
+                    @foreach (var verse in Model.Results)
+                    {
+                        <div class="verse-row">
+                            <div class="verse-ref">
+                                <span class="ref-badge">@verse.ShortReference</span>
+                            </div>
+                            <div class="verse-text">@verse.Text</div>
+                            <div class="verse-action">
+                                <a asp-controller="Verse"
+                                   asp-action="Details"
+                                   asp-route-id="@verse.Id"
+                                   class="btn btn-sm">Details</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
